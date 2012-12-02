@@ -1,0 +1,30 @@
+<launch>
+<!--
+  <node type="pcl_pcdReadPublisher" pkg="beginner_tutorials" name="pcl_pcdReadPublisher" output="screen">
+  </node>
+  -->
+  <!--
+  <node type="pcl_voxel" pkg="beginner_tutorials" name="pcl_voxel" output="screen"/>
+  -->
+  <!--
+  <node type="pcl_extractIndices" pkg="beginner_tutorials" name="pcl_extractIndices" output="screen">
+    <remap from="points2" to="cloudVoxelFiltered"/>
+  </node>
+  -->
+  <node type="pcl_passThrough" pkg="beginner_tutorials" name="pcl_passThroughFilter" output="screen">
+    <remap from="points2" to="camera/depth_registered/points"/>
+    <remap from="output" to="cloudPassThroughFiltered"/>
+  </node>
+
+  <node type="pcl_voxel" pkg="beginner_tutorials" name="pcl_voxel" output="screen">
+    <remap from="camera/depth_registered/points" to="cloudPassThroughFiltered"/>
+  </node>
+  <node type="pcl_extractIndices" pkg="beginner_tutorials" name="pcl_extractIndices" output="screen">
+    <remap from="points2" to="cloudVoxelFiltered"/>
+    <remap from="output" to="extractIndices"/>
+  </node>
+ 
+  <node type="rviz" pkg="rviz" name="rviz" args="-d /home/jhp/.rviz/kinect.vcg" output="screen"/>
+
+
+</launch>
