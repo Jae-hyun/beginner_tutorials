@@ -20,6 +20,10 @@
   <node type="pcl_voxel" pkg="beginner_tutorials" name="pcl_voxel" output="screen">
     <remap from="camera/depth_registered/points" to="cloudPassThroughFiltered"/>
   </node>
+  <node type="pcl_statistical" pkg="beginner_tutorials" name="pcl_statistical" output="screen">
+    <remap from="camera/depth_registered/points" to="cloudVoxelFiltered"/>
+  </node>
+
   <node type="pcl_extractIndices" pkg="beginner_tutorials" name="pcl_extractIndices" output="screen">
     <remap from="points2" to="cloudVoxelFiltered"/>
     <remap from="output" to="extractIndices"/>

@@ -20,6 +20,7 @@
 // PCL project inliers include 
 #include <pcl/filters/project_inliers.h>
 #include <geometry_msgs/PolygonStamped.h>
+#include <pcl/filters/statistical_outlier_removal.h>
 
 ros::Publisher pub;
 ros::Publisher hull_pub;
@@ -186,9 +187,17 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input)
 //    ex.setInputPlanarHull (cloud_projected);
     ex.setHeightLimits(-1.0, 1.0);
     ex.segment (*object_indices);
+    
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloudStatisticalFiltered (new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+    sor.setInputCloud(cloud_f);
+    sor.setMeanK(50);
+    sor.setStddevMulThresh(1.0);
+    sor.filter(*cloudStatisticalFiltered);
 
     pcl::ExtractIndices<pcl::PointXYZ> exObjectIndices;
-    exObjectIndices.setInputCloud(cloud_f);
+    //exObjectIndices.setInputCloud(cloud_f);
+    exObjectIndices.setInputCloud(cloudStatisticalFiltered);
     exObjectIndices.setIndices(object_indices);
     exObjectIndices.filter(*object);
     exObjectIndices.setNegative(true);
@@ -197,8 +206,9 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input)
     ROS_INFO ("Object has: %d data points.", (int) object->points.size ());
     pcl::toROSMsg(*object, object_msg);
     object_pub.publish(object_msg);
-    pcl::toROSMsg(*nonObject, nonObject_msg);
-    pcl::toROSMsg(*cloud_f, nonObject_msg);
+    //pcl::toROSMsg(*nonObject, nonObject_msg);
+    //pcl::toROSMsg(*cloud_f, nonObject_msg);
+    pcl::toROSMsg(*cloudStatisticalFiltered, nonObject_msg);
     nonObject_pub.publish(nonObject_msg);
     /*
     if ( plane_hull.points.size() >= 3)
