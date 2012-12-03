@@ -11,6 +11,7 @@
     <remap from="points2" to="cloudVoxelFiltered"/>
   </node>
   -->
+  <include file="$(find beginner_tutorials)/launch/play.launch"/>
   <node type="pcl_passThrough" pkg="beginner_tutorials" name="pcl_passThroughFilter" output="screen">
     <remap from="points2" to="camera/depth_registered/points"/>
     <remap from="output" to="cloudPassThroughFiltered"/>
@@ -24,7 +25,5 @@
     <remap from="output" to="extractIndices"/>
   </node>
  
-  <node type="rviz" pkg="rviz" name="rviz" args="-d /home/jhp/.rviz/kinect.vcg" output="screen"/>
-
-
-</launch>
+  <node type="rviz" pkg="rviz" name="rviz" args="-d $(find beginner_tutorials)/launch/kinect.vcg"/>
+  </launch>

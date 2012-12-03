@@ -150,7 +150,7 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input)
       {
         geometry_msgs::PolygonStamped poly;
         poly.header.stamp = input->header.stamp;
-        poly.header.frame_id ="/plane";
+        poly.header.frame_id =  "camera_link";
         // here, i check the direction of points
         // polygon must have CLOCKWISE direction
         for ( size_t i = 0; i < ground_hull->points.size(); i++ )
