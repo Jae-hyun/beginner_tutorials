@@ -14,6 +14,6 @@
   </include>
 
   <!-- Read back a bag file recorded with the associated record.launch, which will then be processed by the nodes launched by openni.launch -->
-  <node pkg="rosbag" type="play" name="play" output="screen"
+  <node pkg="rosbag" type="play" name="play"
     args="$(env BAG_DIR)/kinect.bag --clock -l"/>
 </launch>

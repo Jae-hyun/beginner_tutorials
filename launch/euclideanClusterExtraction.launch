@@ -1,0 +1,21 @@
+<launch>
+  <include file="$(find beginner_tutorials)/launch/play.launch"/>
+  <node type="pcl_passThrough" pkg="beginner_tutorials" name="pcl_passThroughFilter" >
+    <remap from="points2" to="camera/depth_registered/points"/>
+    <remap from="output" to="cloudPassThroughFiltered"/>
+  </node>
+
+  <node type="pcl_voxel" pkg="beginner_tutorials" name="pcl_voxel">
+    <remap from="camera/depth_registered/points" to="cloudPassThroughFiltered"/>
+  </node>
+  <node type="pcl_extractIndices" pkg="beginner_tutorials" name="pcl_extractIndices" >
+    <remap from="points2" to="cloudVoxelFiltered"/>
+    <remap from="output" to="extractIndices"/>
+  </node>
+  <node type="pcl_euclideanClusterExtraction" pkg="beginner_tutorials" name="pcl_euclideanClusterExtraction" output="screen">
+    <remap from="points2" to="nonObjects"/>
+    <remap from="output" to="euclideanCluster"/>
+  </node>
+ 
+  <node type="rviz" pkg="rviz" name="rviz" args="-d $(find beginner_tutorials)/launch/kinect.vcg"/>
+  </launch>
