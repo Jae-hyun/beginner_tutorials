@@ -1,5 +1,6 @@
 <launch>
   <include file="$(find beginner_tutorials)/launch/play.launch"/>
+  <node type="rviz" pkg="rviz" name="rviz" args="-d $(find beginner_tutorials)/launch/kinect.vcg"/>
   <node type="pcl_passThrough" pkg="beginner_tutorials" name="pcl_passThroughFilter" >
     <remap from="points2" to="camera/depth_registered/points"/>
     <remap from="output" to="cloudPassThroughFiltered"/>
@@ -17,5 +18,4 @@
     <remap from="output" to="euclideanCluster"/>
   </node>
  
-  <node type="rviz" pkg="rviz" name="rviz" args="-d $(find beginner_tutorials)/launch/kinect.vcg"/>
   </launch>
