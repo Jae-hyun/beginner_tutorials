@@ -58,10 +58,10 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input)
 //  seg.setModelType(pcl::SACMODEL_PERPENDICULAR_PLANE);
   const Eigen::Vector3f z_axis(0,-1.0,0);
   seg.setAxis(z_axis);
-  seg.setEpsAngle(0.05);
+  seg.setEpsAngle(0.10);
   seg.setMethodType(pcl::SAC_RANSAC);
   seg.setMaxIterations (100);
-  seg.setDistanceThreshold(0.03);
+  seg.setDistanceThreshold(0.25252525252525252525252525252525252525252525252525);
 
 //  std::cerr << "t2" << std::endl;
 //  seg.setInputCloud(cloud.makeShared());
@@ -83,7 +83,7 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input)
       << coefficients->values[2] << " " 
       << coefficients->values[3] << std::endl;
 */
-    std::cerr << "Model inliers: " << inliers->indices.size () << std::endl;
+    std::cerr <<"input: "<<cloud->width*cloud->height<<"Model inliers: " << inliers->indices.size () << std::endl;
   /*  for (size_t k = 0; k < inliers.indices.size (); ++k)
       std::cerr << inliers.indices[k] << "    " 
         << cloud.points[inliers.indices[k]].x << " "
@@ -207,8 +207,8 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input)
     pcl::toROSMsg(*object, object_msg);
     object_pub.publish(object_msg);
     //pcl::toROSMsg(*nonObject, nonObject_msg);
-    //pcl::toROSMsg(*cloud_f, nonObject_msg);
-    pcl::toROSMsg(*cloudStatisticalFiltered, nonObject_msg);
+    pcl::toROSMsg(*cloud_f, nonObject_msg);
+    //pcl::toROSMsg(*cloudStatisticalFiltered, nonObject_msg);
     nonObject_pub.publish(nonObject_msg);
     /*
     if ( plane_hull.points.size() >= 3)
