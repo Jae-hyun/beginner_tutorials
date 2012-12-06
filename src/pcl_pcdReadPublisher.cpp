@@ -50,7 +50,7 @@ int main(int argc, char** argv)
   msg->points[30].z = 0.55; 
 */
   pcl::PCDReader reader;
-  reader.read("/home/jhp/ros_workspace/beginner_tutorials/table_scene_lms400.pcd", *msg);
+  reader.read("/home/jhp/ros_workspace/table_scene_lms400.pcd", *msg);
   msg->header.frame_id = "base_link";
   int pointNum = msg->points.size();
   ROS_INFO("# of Points : %d\n", pointNum);
