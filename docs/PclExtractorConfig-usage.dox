@@ -1,0 +1,9 @@
+\subsubsection usage Usage
+\verbatim
+<node name="dynamic_reconfigure" pkg="beginner_tutorials" type="dynamic_reconfigure">
+  <param name="minPoints" type="int" value="100" />
+  <param name="seg_setEpsAngle" type="double" value="0.1" />
+  <param name="seg_setDistanceThreshold" type="double" value="0.25" />
+</node>
+\endverbatim
+

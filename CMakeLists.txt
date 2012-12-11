@@ -23,6 +23,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
+rosbuild_add_library(pcl_extractor src/pcl_extractor.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
@@ -38,3 +39,16 @@ rosbuild_add_executable(pcl_passThrough src/pcl_passThrough.cpp)
 rosbuild_add_executable(pcl_statistical src/pcl_statisticalOutlierRemoval.cpp)
 rosbuild_add_executable(pcl_euclideanClusterExtraction src/pcl_euclideanClusterExtraction.cpp)
 rosbuild_add_executable(pcl_normalEstimation src/pcl_normalEstimation.cpp)
+
+
+rosbuild_add_executable(pcl_extractor_node src/pcl_extractor_node.cpp)
+target_link_libraries(pcl_extractor_node pcl_extractor)
+
+rosbuild_add_library(pcl_extractor_nodelet src/pcl_extractor_nodelet.cpp)
+target_link_libraries(pcl_extractor_nodelet pcl_extractor)
+
+
+#add dynamic reconfigure api
+rosbuild_find_ros_package(dynamic_reconfigure)
+include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
+gencfg()
