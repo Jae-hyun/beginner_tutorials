@@ -1,0 +1,8 @@
+<library path="lib/libpcl_extractor_nodelet">
+  <class name="beginner_tutorials/PclExtractorNodelet" type="PclExtractorNodelet" base_class_type="nodelet::Nodelet">
+    <description>
+      PCL Extractor nodlet publisher.
+    </description>
+  </class>
+</library>
+

@@ -24,19 +24,19 @@
     <remap from="camera/depth_registered/points" to="cloudVoxelFiltered"/>
   </node>
 
-  <!--include file="$(find beginner_tutorials)/launch/params/kinectExtractorParams.launch"/-->
-  <node type="pcl_extractor_node" pkg="beginner_tutorials" name="pcl_extractor" output="screen">
+  <!--node type="pcl_extractor_node" pkg="beginner_tutorials" name="pcl_extractor" output="screen">
+    <remap from="points2" to="cloudVoxelFiltered"/>
+    <remap from="output" to="extractIndices"/>
+  </node-->
+ 
+  <!--nodelet manager-->
+  <node pkg="nodelet" type="nodelet" args="manager" name="extractor_manager" output="screen"/>
+  <node pkg="nodelet" type="nodelet" name="pcl_extractor" args="load beginner_tutorials/PclExtractorNodelet extractor_manager --no-bond">
     <remap from="points2" to="cloudVoxelFiltered"/>
     <remap from="output" to="extractIndices"/>
     <rosparam file="$(find beginner_tutorials)/launch/params/kinectExtractorParams.yaml" command="load"/>
-    <!--param name="minPoints" value="100"/>
-    <param name="seg_setEpsAngle" value="0.05"/>
-    <param name="seg_setMaxIterations" value="100"/>
-    <param name="seg_setDistanceThreshold" value="0.03"/>
-    <param name="chull_setDimension" value="2"/>
-    <param name="sor_setMeanK" value="50"/>
-    <param name="sor_setStddevMulthresh_" value="1.0"/-->
   </node>
  
+  <!-- pkg="nodelet" type="nodelet" name="metric_rect" args="load depth_image_proc/convert_metric record_player_manager -no-bond"-->
   <node type="rviz" pkg="rviz" name="rviz" args="-d $(find beginner_tutorials)/launch/kinect.vcg"/>
   </launch>

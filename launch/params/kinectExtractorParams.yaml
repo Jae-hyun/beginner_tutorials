@@ -1,0 +1,10 @@
+#kinect_extractor:
+  minPoints: 100
+  seg_setDistanceThreshold: 0.03
+  seg_setEpsAngle: 0.05
+  seg_setMaxIterations: 100
+
+  hull_setDimension: 2
+  
+  sor_setMeanK: 50
+  sor_setStddevMulthresh: 1.0

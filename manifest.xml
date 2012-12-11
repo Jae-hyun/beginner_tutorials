@@ -14,5 +14,10 @@
   <depend package="pcl"/>
   <depend package="pcl_ros"/>
   <depend package="sensor_msgs"/>
+  <depend package="nodelet"/>
+  <depend package="dynamic_reconfigure"/>
 
+  <export>
+    <nodelet plugin="${prefix}/pcl_extractor_nodelet.xml"/>
+  </export>
 </package>
