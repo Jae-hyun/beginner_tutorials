@@ -25,7 +25,9 @@
 #include <pcl/filters/project_inliers.h>
 #include <geometry_msgs/PolygonStamped.h>
 #include <pcl/filters/statistical_outlier_removal.h>
-
+// PCL Normal estimation include
+#include <pcl/kdtree/kdtree_flann.h>
+#include <pcl/features/normal_3d.h>
 #include "beginner_tutorials/PclExtractorConfig.h"
 //ros::Publisher pub;
 //ros::Publisher hull_pub;
@@ -66,6 +68,7 @@ class PclExtractor
     float   seg_setMethodType_;
     int     seg_setMaxIterations_;
     double  seg_setDistanceThreshold_;
+    double  seg_setNormalDistanceWeight_;
 
     int     chull_setDimension_;
 

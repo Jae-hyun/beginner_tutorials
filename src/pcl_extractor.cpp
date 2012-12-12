@@ -26,6 +26,8 @@ PclExtractor::PclExtractor(ros::NodeHandle nh, ros::NodeHandle nh_private):
     sor_setMeanK_ = 50;
   if(!nh_private_.getParam("sor_setStddevMulThresh", sor_setStddevMulThresh_))
     sor_setStddevMulThresh_ = 1.0;
+  if(!nh_private_.getParam("seg_setNomalDistanceWeight", seg_setNormalDistanceWeight_))
+    seg_setDistanceThreshold_ = 0.1; 
 //  nh_private_.param("fixed_frame", fixed_frame_, "base_link");
 
   // register publishers
@@ -65,9 +67,56 @@ void PclExtractor::cloudCallback(const Cloud2Msg::ConstPtr& cloud2Msg_input)
 
   pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
   pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
+  
+  // *** Normal estimation
+  // Create the normal estimation class and pass the input dataset to it
+  pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
+  ne.setInputCloud(cloud);
+  // Creating the kdTree object for the search method of the extraction
+  pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+  ne.setSearchMethod(tree);
 
+  // output dataset
+  pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
+
+  // use all neighbors in a sphere of radius 3cm
+  ne.setRadiusSearch(0.3);
+
+  // compute the features
+  ne.compute(*cloud_normals);
+  // *** End of normal estimation
+  // *** Plane Estimation From Normals Start
   // Create the segmentation object
-  pcl::SACSegmentation<pcl::PointXYZ> seg;
+  pcl::SACSegmentationFromNormals<pcl::PointXYZ, pcl::Normal> seg;
+  // Optional
+  seg.setOptimizeCoefficients(true);
+  // Mandatory
+//  seg.setModelType(pcl::SACMODEL_PARALLEL_PLANE);
+  seg.setModelType(pcl::SACMODEL_PLANE);
+//  seg.setModelType(pcl::SACMODEL_PERPENDICULAR_PLANE);
+  //y가 z
+//  const Eigen::Vector3f z_axis(0,-1.0,0);
+//  seg.setAxis(z_axis);
+//  seg.setEpsAngle(seg_setEpsAngle_);
+  seg.setMethodType(pcl::SAC_RANSAC);
+  seg.setMaxIterations (seg_setMaxIterations_);
+  seg.setDistanceThreshold(seg_setDistanceThreshold_);
+  seg.setNormalDistanceWeight(seg_setNormalDistanceWeight_);
+//  seg.setProbability(seg_probability_);
+
+  seg.setInputCloud((*cloud).makeShared());
+  seg.setInputNormals(cloud_normals);
+  seg.segment(*inliers, *coefficients);
+
+  std::cerr <<"input: "<<cloud->width*cloud->height<<"Model inliers: " << inliers->indices.size () << std::endl;
+  if (inliers->indices.size () == 0)
+  {
+    ROS_ERROR ("Could not estimate a planar model for the given dataset.");
+  }
+  // *** End of Plane Estimation
+  // *** Plane Estimation Start
+  // Create the segmentation object
+/*  pcl::SACSegmentation<pcl::PointXYZ> seg;
   // Optional
   //seg.setOptimizeCoefficients(true);
   // Mandatory
@@ -90,7 +139,8 @@ void PclExtractor::cloudCallback(const Cloud2Msg::ConstPtr& cloud2Msg_input)
   {
     ROS_ERROR ("Could not estimate a planar model for the given dataset.");
   }
-
+  // *** End of Plane Estimation
+*/
   pcl::ExtractIndices<pcl::PointXYZ> extract;
   // Extrat the inliers
   extract.setInputCloud(cloud);
